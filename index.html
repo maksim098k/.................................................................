@@ -1,9 +1,9 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Новогоднее поздравление 🎄</title>
   <style>
-    /* Все предыдущие стили остаются без изменений... */
     body {
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -16,6 +16,7 @@
       overflow-x: hidden;
       position: relative;
       min-height: 100vh;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body::before {
@@ -91,6 +92,8 @@
       box-shadow: 0 4px 15px rgba(255, 65, 108, 0.4);
       position: relative;
       overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
 
     button:hover {
@@ -123,7 +126,7 @@
       padding: 25px;
       background: rgba(255, 255, 255, 0.1);
       border-radius: 15px;
-      width: 80%;
+      width: 90%;
       max-width: 800px;
       border: 1px solid rgba(255, 215, 0, 0.3);
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
@@ -149,7 +152,7 @@
       100% { background-position: 400% 0; }
     }
 
-    /* Стили для изображений в галерее (остаются) */
+    /* Стили для изображений в галерее */
     #gallery img {
       width: 180px;
       height: 180px;
@@ -159,7 +162,7 @@
       transition: all 0.3s ease;
       object-fit: cover;
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-      cursor: pointer; /* Добавляем курсор-указатель */
+      cursor: pointer;
     }
 
     #gallery img:hover {
@@ -193,6 +196,8 @@
       display: block;
       margin: 20px auto;
       box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+      max-width: 100%;
+      height: auto;
     }
 
     .controls {
@@ -201,6 +206,7 @@
       gap: 15px;
       margin: 15px 0;
       align-items: center;
+      flex-wrap: wrap;
     }
 
     .key {
@@ -215,7 +221,7 @@
     .game-stats {
       display: flex;
       justify-content: center;
-      gap: 30px;
+      gap: 20px;
       margin: 15px 0;
       flex-wrap: wrap;
     }
@@ -225,6 +231,7 @@
       padding: 10px 20px;
       border-radius: 10px;
       border: 1px solid rgba(255, 215, 0, 0.3);
+      min-width: 120px;
     }
 
     .music-note {
@@ -235,6 +242,15 @@
       font-size: 24px;
       animation: bounce 2s infinite;
       z-index: 1000;
+      cursor: pointer;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 50%;
+      padding: 10px;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     @keyframes bounce {
@@ -242,19 +258,57 @@
       50% { transform: translateY(-10px); }
     }
 
-    @media (max-width: 768px) {
-      h1 { font-size: 2em; }
-      #countdown { font-size: 1.3em; }
-      #gallery img { width: 140px; height: 140px; }
-      button { padding: 10px 20px; font-size: 1em; }
-      .game-stats { gap: 15px; }
-      .stat-item { padding: 8px 15px; font-size: 0.9em; }
-      .music-note { bottom: 10px; right: 10px; font-size: 20px; }
+    /* === СЕНСОРНОЕ УПРАВЛЕНИЕ ДЛЯ ИГРЫ === */
+    .touch-controls {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin: 25px 0;
+      flex-wrap: wrap;
+      touch-action: manipulation;
+    }
+    
+    .touch-btn {
+      padding: 25px 40px;
+      background: linear-gradient(45deg, #4CAF50, #45a049);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      font-size: 32px;
+      font-weight: bold;
+      cursor: pointer;
+      min-width: 100px;
+      box-shadow: 0 8px 0 #388E3C, 0 12px 20px rgba(0,0,0,0.4);
+      transition: all 0.1s;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    
+    .touch-btn:active {
+      transform: translateY(6px);
+      box-shadow: 0 2px 0 #388E3C, 0 4px 10px rgba(0,0,0,0.3);
+    }
+    
+    .pause-btn {
+      background: linear-gradient(45deg, #2196F3, #1976D2);
+      box-shadow: 0 8px 0 #1565C0, 0 12px 20px rgba(0,0,0,0.4);
+      min-width: 120px;
+    }
+    
+    .pause-btn:active {
+      box-shadow: 0 2px 0 #1565C0, 0 4px 10px rgba(0,0,0,0.3);
+    }
+    
+    .mobile-instruction {
+      background: rgba(255, 215, 0, 0.2);
+      padding: 15px;
+      border-radius: 10px;
+      margin: 20px 0;
+      border: 2px dashed rgba(255, 215, 0, 0.5);
     }
 
-    /* === ДОБАВЛЯЕМ ТОЛЬКО ЭТИ СТИЛИ ДЛЯ МОДАЛЬНОГО ОКНА === */
-    
-    /* Модальное окно */
+    /* === МОДАЛЬНОЕ ОКНО === */
     .modal {
       display: none;
       position: fixed;
@@ -263,8 +317,9 @@
       top: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0, 0, 0, 0.9);
+      background-color: rgba(0, 0, 0, 0.95);
       animation: fadeIn 0.3s ease;
+      touch-action: pan-y;
     }
 
     @keyframes fadeIn {
@@ -272,15 +327,15 @@
       to { opacity: 1; }
     }
 
-    /* Изображение в модальном окне */
     .modal-content {
       margin: auto;
       display: block;
-      max-width: 90%;
-      max-height: 85vh;
+      max-width: 95%;
+      max-height: 80vh;
       border-radius: 10px;
       box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
       animation: zoomIn 0.3s ease;
+      touch-action: pan-y pinch-zoom;
     }
 
     @keyframes zoomIn {
@@ -288,7 +343,6 @@
       to { transform: scale(1); opacity: 1; }
     }
 
-    /* Кнопка закрытия */
     .close {
       position: absolute;
       top: 20px;
@@ -299,6 +353,14 @@
       cursor: pointer;
       transition: all 0.3s ease;
       z-index: 10000;
+      background: rgba(0, 0, 0, 0.5);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .close:hover {
@@ -306,17 +368,15 @@
       transform: rotate(90deg) scale(1.1);
     }
 
-    /* Подпись к изображению */
     #caption {
       margin: 15px auto;
       text-align: center;
       color: white;
       font-size: 1.2em;
-      max-width: 700px;
+      max-width: 90%;
       padding: 10px;
     }
 
-    /* Кнопки навигации (лево/право) */
     .modal-nav {
       position: absolute;
       top: 50%;
@@ -324,12 +384,13 @@
       background-color: rgba(0, 0, 0, 0.7);
       color: white;
       border: none;
-      padding: 15px 20px;
-      font-size: 24px;
+      padding: 20px 25px;
+      font-size: 28px;
       cursor: pointer;
       border-radius: 50%;
       transition: all 0.3s ease;
       z-index: 10000;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .modal-nav:hover {
@@ -345,7 +406,6 @@
       right: 20px;
     }
 
-    /* Счетчик изображений */
     .image-counter {
       position: absolute;
       top: 20px;
@@ -358,39 +418,193 @@
       z-index: 10000;
     }
 
-    /* Адаптивность для мобильных */
+    /* === АДАПТИВНОСТЬ ДЛЯ ТЕЛЕФОНОВ === */
     @media (max-width: 768px) {
+      h1 { 
+        font-size: 2em; 
+        margin-top: 15px;
+        padding: 5px;
+      }
+      
+      #countdown { 
+        font-size: 1.3em; 
+        margin: 15px 0;
+        padding: 12px;
+      }
+      
+      #gallery img { 
+        width: 140px; 
+        height: 140px; 
+        margin: 10px;
+      }
+      
+      button { 
+        padding: 12px 20px; 
+        font-size: 1em; 
+        margin: 8px;
+        width: 90%;
+        max-width: 300px;
+      }
+      
+      .game-stats { 
+        gap: 10px; 
+      }
+      
+      .stat-item { 
+        padding: 8px 12px; 
+        font-size: 0.9em;
+        min-width: 100px;
+      }
+      
+      .music-note { 
+        bottom: 15px; 
+        right: 15px; 
+        font-size: 20px;
+        width: 45px;
+        height: 45px;
+      }
+      
       .modal-nav {
-        padding: 10px 15px;
-        font-size: 18px;
+        padding: 15px 20px;
+        font-size: 24px;
       }
       
-      .prev {
-        left: 10px;
-      }
-      
-      .next {
-        right: 10px;
-      }
+      .prev { left: 15px; }
+      .next { right: 15px; }
       
       .close {
-        top: 10px;
-        right: 15px;
-        font-size: 30px;
+        top: 15px;
+        right: 20px;
+        font-size: 35px;
+        width: 45px;
+        height: 45px;
       }
       
       .image-counter {
-        top: 10px;
-        left: 15px;
-        font-size: 14px;
-        padding: 5px 10px;
+        top: 15px;
+        left: 20px;
+        font-size: 16px;
+        padding: 6px 12px;
       }
+      
+      #gameCanvas {
+        width: 95% !important;
+        height: 300px !important;
+      }
+      
+      .touch-btn {
+        padding: 20px 30px;
+        font-size: 28px;
+        min-width: 80px;
+      }
+      
+      .pause-btn {
+        min-width: 100px;
+      }
+    }
+    
+    /* Для очень маленьких экранов */
+    @media (max-width: 480px) {
+      h1 { 
+        font-size: 1.7em; 
+        margin-top: 10px;
+      }
+      
+      #gallery img { 
+        width: 100px; 
+        height: 100px;
+        margin: 6px;
+      }
+      
+      button { 
+        padding: 10px 15px; 
+        font-size: 0.9em; 
+        margin: 5px;
+      }
+      
+      #card, #wish, #gallery, #game {
+        width: 95% !important;
+        padding: 15px !important;
+        margin: 20px auto !important;
+      }
+      
+      .touch-btn {
+        padding: 18px 25px;
+        font-size: 24px;
+        min-width: 70px;
+      }
+      
+      .pause-btn {
+        min-width: 90px;
+      }
+      
+      .stat-item {
+        min-width: 80px;
+        padding: 6px 10px;
+        font-size: 0.8em;
+      }
+      
+      .game-stats {
+        gap: 8px;
+      }
+    }
+    
+    /* Для горизонтальной ориентации телефона */
+    @media (max-height: 500px) and (orientation: landscape) {
+      h1 { 
+        font-size: 1.5em; 
+        margin-top: 5px;
+      }
+      
+      #countdown { 
+        margin: 10px 0; 
+        padding: 8px; 
+        font-size: 1em; 
+      }
+      
+      button { 
+        padding: 8px 15px; 
+        font-size: 0.9em; 
+        margin: 3px;
+      }
+      
+      #gallery img { 
+        width: 80px; 
+        height: 80px;
+        margin: 4px;
+      }
+      
+      .touch-btn {
+        padding: 15px 20px;
+        font-size: 20px;
+        min-width: 60px;
+      }
+      
+      #gameCanvas {
+        height: 250px !important;
+      }
+    }
+    
+    /* Предотвращение выделения текста на мобильных */
+    * {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    
+    /* Исключение для текста, который должен быть доступен для выделения */
+    p, h1, h2, h3, span {
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      -ms-user-select: text;
+      user-select: text;
     }
   </style>
 </head>
 <body>
-  <!-- Просто музыкальная нота как индикатор -->
-  <div class="music-note" title="Играет новогодняя музыка">🎵</div>
+  <!-- Кнопка включения музыки -->
+  <div class="music-note" title="Включить новогоднюю музыку" onclick="playMusic()">🎵</div>
 
   <h1>С Новым Годом, друзья! 🎉</h1>
   <div id="countdown"></div>
@@ -399,6 +613,7 @@
   <button onclick="generateWish()">✨ Пожелание</button>
   <button onclick="showGallery()">📸 Галерея</button>
   <button onclick="startGame()">🎮 Помоги Деду Морозу</button>
+  <button onclick="playMusic()" style="background: linear-gradient(45deg, #4CAF50, #45a049);">🎵 Включить музыку</button>
 
   <div id="card" style="display:none;">
     <h2>🎄 Персональная открытка</h2>
@@ -418,7 +633,6 @@
   <div id="gallery" style="display:none;">
     <h2>🎞️ Галерея воспоминаний</h2>
     <div>
-      <!-- Ваши изображения - теперь они кликабельные -->
       <img src="1.jpg" alt="Фото 1" onclick="openModal(0)">
       <img src="2.jpg" alt="Фото 2" onclick="openModal(1)">
       <img src="3.jpg" alt="Фото 3" onclick="openModal(2)">
@@ -462,6 +676,30 @@
     <h2>🎅 Дед Мороз собирает шампанское 🥂</h2>
     <p>Помоги Деду Морозу собрать бутылки шампанского для праздничного стола!</p>
     
+    <!-- Сенсорное управление для телефонов -->
+    <div class="mobile-instruction">
+      <p>📱 <strong>На телефоне:</strong> используйте кнопки ниже для управления</p>
+    </div>
+    
+    <div class="touch-controls">
+      <button class="touch-btn" 
+              ontouchstart="moveSantaLeft()" 
+              ontouchend="stopSanta()"
+              onmousedown="moveSantaLeft()"
+              onmouseup="stopSanta()"
+              onmouseleave="stopSanta()">←</button>
+      
+      <button class="touch-btn pause-btn" 
+              onclick="togglePause()">⏸️/▶️</button>
+      
+      <button class="touch-btn" 
+              ontouchstart="moveSantaRight()" 
+              ontouchend="stopSanta()"
+              onmousedown="moveSantaRight()"
+              onmouseup="stopSanta()"
+              onmouseleave="stopSanta()">→</button>
+    </div>
+    
     <div class="controls">
       <div class="key">←</div>
       <span>Влево</span>
@@ -471,7 +709,7 @@
       <span>Пауза</span>
     </div>
     
-    <canvas id="gameCanvas" width="600" height="500"></canvas>
+    <canvas id="gameCanvas" width="600" height="400"></canvas>
     
     <div class="game-stats">
       <div class="stat-item" style="color: gold;">
@@ -492,38 +730,29 @@
     
     <div style="margin-top: 20px; font-size: 0.9em; opacity: 0.8;">
       <p>📈 Сложность увеличивается каждые 30 секунд!</p>
+      <p>🎯 На телефоне используйте большие кнопки для управления</p>
     </div>
   </div>
 
   <script>
-    // ============= ФУНКЦИИ ДЛЯ МОДАЛЬНОГО ОКНА =============
+    // ============= ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ =============
     let currentImageIndex = 0;
+    let gameState = {
+      active: false,
+      santaMove: 0,
+      gamePaused: false
+    };
+    let audio = null;
     
     // Массив с путями к изображениям
     const galleryImages = [
-      "1.jpg",
-      "2.jpg",
-     "3.jpg",
-       "4.jpg",
-     "5.jpg",
-     "6.jpg",
-     "7.jpg",
-     "8.jpg",
-     "9.jpg",
-     "10.jpg",
-     "11.jpg",
-     "12.jpg",
-     "13.jpg",
-     "14.jpg",
-     "15.jpg",
-     "16.jpg",
-     "17.jpg",
-     "18.jpg",
-     "19.jpg",
-     "20.jpg",
+      "1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg",
+      "6.jpg", "7.jpg", "8.jpg", "9.jpg", "10.jpg",
+      "11.jpg", "12.jpg", "13.jpg", "14.jpg", "15.jpg",
+      "16.jpg", "17.jpg", "18.jpg", "19.jpg", "20.jpg"
     ];
 
-    // Открыть модальное окно с изображением
+    // ============= ФУНКЦИИ МОДАЛЬНОГО ОКНА =============
     function openModal(index) {
       currentImageIndex = index;
       updateModal();
@@ -531,13 +760,11 @@
       document.body.style.overflow = 'hidden';
     }
 
-    // Закрыть модальное окно
     function closeModal() {
       document.getElementById('imageModal').style.display = 'none';
       document.body.style.overflow = 'auto';
     }
 
-    // Обновить содержимое модального окна
     function updateModal() {
       const modalImg = document.getElementById('fullImage');
       const caption = document.getElementById('caption');
@@ -549,11 +776,9 @@
       counter.textContent = `${currentImageIndex + 1} / ${galleryImages.length}`;
     }
 
-    // Переключение между изображениями
     function changeImage(direction) {
       currentImageIndex += direction;
       
-      // Зацикливание
       if (currentImageIndex < 0) {
         currentImageIndex = galleryImages.length - 1;
       } else if (currentImageIndex >= galleryImages.length) {
@@ -563,20 +788,14 @@
       updateModal();
     }
 
-    // Управление с клавиатуры
+    // ============= УПРАВЛЕНИЕ МОДАЛЬНЫМ ОКНОМ С КЛАВИАТУРЫ =============
     document.addEventListener('keydown', (e) => {
       const modal = document.getElementById('imageModal');
       if (modal.style.display === 'block') {
         switch(e.key) {
-          case 'ArrowLeft':
-            changeImage(-1);
-            break;
-          case 'ArrowRight':
-            changeImage(1);
-            break;
-          case 'Escape':
-            closeModal();
-            break;
+          case 'ArrowLeft': changeImage(-1); break;
+          case 'ArrowRight': changeImage(1); break;
+          case 'Escape': closeModal(); break;
         }
       }
     });
@@ -588,29 +807,25 @@
       }
     };
 
-    // ============= ВСЕ ОСТАЛЬНЫЕ ФУНКЦИИ =============
-    
-    // ============= ПРОСТАЯ НОВОГОДНЯЯ МУЗЫКА =============
+    // ============= МУЗЫКА =============
     function playMusic() {
-      const audio = new Audio();
-      audio.src = "https://assets.mixkit.co/music/preview/mixkit-jingle-bells-311.mp3";
-      audio.loop = true;
-      audio.volume = 0.3;
+      if (!audio) {
+        audio = new Audio();
+        audio.src = "https://assets.mixkit.co/music/preview/mixkit-jingle-bells-311.mp3";
+        audio.loop = true;
+        audio.volume = 0.3;
+      }
       
-      const playPromise = audio.play();
-      
-      if (playPromise !== undefined) {
-        playPromise.catch(error => {
-          document.body.addEventListener('click', function startMusicOnClick() {
-            audio.play();
-            document.body.removeEventListener('click', startMusicOnClick);
-          }, { once: true });
-        });
+      if (audio.paused) {
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(error => {
+            // Для iOS нужно взаимодействие с пользователем
+            alert('Нажмите "Включить музыку" для запуска');
+          });
+        }
       }
     }
-
-    // Запускаем музыку при загрузке страницы
-    window.addEventListener('DOMContentLoaded', playMusic);
 
     // ============= ТАЙМЕР ОБРАТНОГО ОТСЧЁТА =============
     function updateCountdown() {
@@ -629,13 +844,12 @@
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
-    // ============= ОТКРЫТКА =============
+    // ============= ОСНОВНЫЕ ФУНКЦИИ =============
     function showCard() {
       hideAll();
       document.getElementById("card").style.display = "block";
     }
 
-    // ============= ГЕНЕРАТОР ПОЖЕЛАНИЙ =============
     const wishes = [
       "Пусть счастье будет рядом весь год, а удача никогда не покидает!",
       "Здоровья крепкого, радости безмерной и сказочного настроения!",
@@ -653,19 +867,52 @@
       document.getElementById("wishText").innerHTML = `"${randomWish}"`;
     }
 
-    // ============= ГАЛЕРЕЯ =============
     function showGallery() {
       hideAll();
       document.getElementById("gallery").style.display = "block";
     }
 
-    // ============= ПОЛНЫЙ КОД ИГРЫ "ПОМОГИ ДЕДУ МОРОЗУ" =============
+    function hideAll(){
+      document.getElementById("card").style.display="none";
+      document.getElementById("wish").style.display="none";
+      document.getElementById("gallery").style.display="none";
+      document.getElementById("game").style.display="none";
+    }
+
+    // ============= ФУНКЦИИ УПРАВЛЕНИЯ ДЛЯ ТЕЛЕФОНА =============
+    function moveSantaLeft() {
+      gameState.santaMove = -1;
+    }
+    
+    function moveSantaRight() {
+      gameState.santaMove = 1;
+    }
+    
+    function stopSanta() {
+      gameState.santaMove = 0;
+    }
+    
+    function togglePause() {
+      if (gameState.active) {
+        gameState.gamePaused = !gameState.gamePaused;
+        showMessage(gameState.gamePaused ? '⏸️ Пауза' : '▶️ Игра продолжается!', '#00CED1');
+        if (!gameState.gamePaused) gameLoop();
+      }
+    }
+
+    // ============= ПОЛНЫЙ КОД ИГРЫ =============
     function startGame() {
       hideAll();
       document.getElementById("game").style.display = "block";
       
       const canvas = document.getElementById("gameCanvas");
       const ctx = canvas.getContext("2d");
+      
+      // Адаптация размера канваса для телефона
+      if (window.innerWidth < 768) {
+        canvas.width = window.innerWidth * 0.9;
+        canvas.height = 400;
+      }
       
       // Игровые переменные
       let score = 0;
@@ -674,18 +921,20 @@
       let spawnRate = 0.008;
       let gameSpeed = 1.5;
       let bottles = [];
-      let gameActive = true;
-      let gamePaused = false;
       let startTime = Date.now();
       let gameTime = 0;
       let difficultyLevel = 1;
+      
+      gameState.active = true;
+      gameState.gamePaused = false;
+      gameState.santaMove = 0;
       
       // Дед Мороз
       const santa = {
         x: canvas.width / 2 - 50,
         y: canvas.height - 150,
-        width: 100,
-        height: 150,
+        width: canvas.width < 400 ? 80 : 100,
+        height: canvas.width < 400 ? 120 : 150,
         speed: 7,
         direction: 0,
         frame: 0,
@@ -714,11 +963,13 @@
           }
         }
         
+        const bottleSize = canvas.width < 400 ? 20 : 25;
+        
         return {
           x: Math.random() * (canvas.width - 40),
           y: -60,
-          width: 25,
-          height: 60,
+          width: bottleSize,
+          height: bottleSize * 2.4,
           speed: 1.5 + Math.random() * gameSpeed,
           type: selectedType,
           rotation: Math.random() * 0.1 - 0.05,
@@ -727,7 +978,7 @@
         };
       }
       
-      // Рисуем реалистичного Деда Мороза
+      // Рисуем Деда Мороза (упрощенная версия для телефона)
       function drawSanta() {
         ctx.save();
         ctx.translate(santa.x + santa.width / 2, santa.y + santa.height);
@@ -738,119 +989,48 @@
           ctx.translate(0, walkOffset);
         }
         
-        // Ноги (валенки)
-        ctx.fillStyle = '#8B4513';
-        ctx.fillRect(-30, -40, 20, 30);
-        ctx.fillRect(10, -40, 20, 30);
-        
-        // Шуба
+        // Упрощенная отрисовка для телефона
         ctx.fillStyle = '#C41E3A';
         ctx.beginPath();
-        ctx.roundRect(-40, -120, 80, 80, 20);
+        ctx.roundRect(-santa.width/2, -santa.height, santa.width, santa.height, 10);
         ctx.fill();
-        
-        // Меховая опушка
-        ctx.fillStyle = 'white';
-        ctx.fillRect(-40, -120, 80, 15);
-        ctx.fillRect(-40, -40, 15, 80);
-        ctx.fillRect(25, -40, 15, 80);
-        ctx.fillRect(-40, -45, 80, 15);
-        
-        // Руки
-        ctx.fillStyle = '#C41E3A';
-        ctx.fillRect(-50, -80, 20, 40);
-        ctx.fillRect(30, -80, 20, 40);
-        
-        // Мех на рукавах
-        ctx.fillStyle = 'white';
-        ctx.fillRect(-50, -80, 20, 10);
-        ctx.fillRect(30, -80, 20, 10);
-        ctx.fillRect(-50, -40, 20, 10);
-        ctx.fillRect(30, -40, 20, 10);
-        
-        // Пояс
-        ctx.fillStyle = 'black';
-        ctx.fillRect(-30, -60, 60, 8);
-        
-        // Пряжка
-        ctx.fillStyle = 'gold';
-        ctx.fillRect(-5, -62, 10, 12);
         
         // Голова
         ctx.fillStyle = '#FFE4C4';
         ctx.beginPath();
-        ctx.arc(0, -140, 28, 0, Math.PI * 2);
-        ctx.fill();
-        
-        // Щеки
-        ctx.fillStyle = 'rgba(255, 100, 100, 0.3)';
-        ctx.beginPath();
-        ctx.arc(-15, -135, 8, 0, Math.PI * 2);
-        ctx.arc(15, -135, 8, 0, Math.PI * 2);
-        ctx.fill();
-        
-        // Глаза
-        ctx.fillStyle = 'black';
-        ctx.beginPath();
-        ctx.arc(-10, -140, 4, 0, Math.PI * 2);
-        ctx.arc(10, -140, 4, 0, Math.PI * 2);
-        ctx.fill();
-        
-        // Нос
-        ctx.fillStyle = '#FF8C00';
-        ctx.beginPath();
-        ctx.ellipse(0, -130, 6, 8, 0, 0, Math.PI * 2);
+        ctx.arc(0, -santa.height - 20, 20, 0, Math.PI * 2);
         ctx.fill();
         
         // Борода
         ctx.fillStyle = 'white';
         ctx.beginPath();
-        ctx.ellipse(0, -120, 25, 35, 0, 0, Math.PI * 2);
-        ctx.fill();
-        
-        // Усы
-        ctx.beginPath();
-        ctx.ellipse(0, -125, 20, 15, 0, 0, Math.PI);
+        ctx.ellipse(0, -santa.height + 10, 18, 25, 0, 0, Math.PI * 2);
         ctx.fill();
         
         // Шапка
         ctx.fillStyle = '#C41E3A';
         ctx.beginPath();
-        ctx.moveTo(-28, -140);
-        ctx.lineTo(28, -140);
-        ctx.lineTo(20, -180);
-        ctx.lineTo(-20, -180);
+        ctx.moveTo(-18, -santa.height - 20);
+        ctx.lineTo(18, -santa.height - 20);
+        ctx.lineTo(12, -santa.height - 50);
+        ctx.lineTo(-12, -santa.height - 50);
         ctx.closePath();
         ctx.fill();
-        
-        // Мех на шапке
-        ctx.fillStyle = 'white';
-        ctx.fillRect(-28, -140, 56, 10);
-        ctx.fillRect(-20, -180, 40, 10);
         
         // Помпон
         ctx.fillStyle = 'white';
         ctx.beginPath();
-        ctx.arc(0, -180, 12, 0, Math.PI * 2);
+        ctx.arc(0, -santa.height - 50, 8, 0, Math.PI * 2);
         ctx.fill();
         
         // Мешок
         ctx.fillStyle = '#8B4513';
-        ctx.beginPath();
-        ctx.roundRect(-25, -20, 50, 40, 10);
-        ctx.fill();
-        
-        // Нить
-        ctx.strokeStyle = 'white';
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.arc(0, -20, 25, 0, Math.PI);
-        ctx.stroke();
+        ctx.fillRect(-20, -30, 40, 30);
         
         ctx.restore();
       }
       
-      // Рисуем бутылку шампанского
+      // Рисуем бутылку (упрощенная версия)
       function drawBottle(bottle) {
         ctx.save();
         ctx.translate(bottle.x + bottle.width / 2, bottle.y + bottle.height / 2);
@@ -858,58 +1038,22 @@
         bottle.angle += bottle.rotation;
         
         ctx.fillStyle = bottle.type.color;
-        ctx.beginPath();
-        ctx.moveTo(-bottle.width / 2, bottle.height / 2 - 5);
-        ctx.lineTo(-bottle.width / 2 + 5, bottle.height / 2);
-        ctx.lineTo(bottle.width / 2 - 5, bottle.height / 2);
-        ctx.lineTo(bottle.width / 2, bottle.height / 2 - 5);
-        ctx.lineTo(bottle.width / 2, -bottle.height / 2 + 20);
-        ctx.lineTo(bottle.width / 2 - 3, -bottle.height / 2 + 15);
-        ctx.lineTo(bottle.width / 2 - 8, -bottle.height / 2 + 10);
-        ctx.lineTo(bottle.width / 2 - 8, -bottle.height / 2);
-        ctx.lineTo(-bottle.width / 2 + 8, -bottle.height / 2);
-        ctx.lineTo(-bottle.width / 2 + 8, -bottle.height / 2 + 10);
-        ctx.lineTo(-bottle.width / 2 + 3, -bottle.height / 2 + 15);
-        ctx.lineTo(-bottle.width / 2, -bottle.height / 2 + 20);
-        ctx.closePath();
-        ctx.fill();
+        ctx.fillRect(-bottle.width/2, -bottle.height/2, bottle.width, bottle.height);
         
+        // Горлышко
         ctx.fillStyle = '#8B4513';
-        ctx.fillRect(-6, -bottle.height / 2, 12, 8);
+        ctx.fillRect(-bottle.width/3, -bottle.height/2, bottle.width/1.5, 8);
         
-        ctx.fillStyle = bottle.sparkle ? 'gold' : 'silver';
-        ctx.fillRect(-6, -bottle.height / 2 + 8, 12, 3);
+        // Этикетка
+        ctx.fillStyle = 'white';
+        ctx.fillRect(-bottle.width/2 + 2, -bottle.height/4, bottle.width - 4, bottle.height/4);
         
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-        ctx.fillRect(-8, -15, 16, 20);
-        
-        ctx.fillStyle = '#333';
-        ctx.font = 'bold 10px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText('NV', 0, -5);
-        ctx.fillText('2025', 0, 5);
-        
+        // Блестки для особых бутылок
         if (bottle.sparkle) {
           ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
           ctx.beginPath();
-          ctx.arc(0, -25, 3, 0, Math.PI * 2);
+          ctx.arc(0, 0, 3, 0, Math.PI * 2);
           ctx.fill();
-        }
-        
-        if (bottle.type.name === "Игристое" || bottle.type.name === "Подарочное") {
-          for (let i = 0; i < 5; i++) {
-            const size = 1 + Math.random() * 2;
-            ctx.fillStyle = `rgba(255, 255, 255, ${0.3 + Math.random() * 0.4})`;
-            ctx.beginPath();
-            ctx.arc(
-              Math.random() * 12 - 6,
-              Math.random() * 30 - 20,
-              size,
-              0,
-              Math.PI * 2
-            );
-            ctx.fill();
-          }
         }
         
         ctx.restore();
@@ -924,18 +1068,11 @@
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
-        ctx.beginPath();
-        for (let x = 0; x < canvas.width; x += 20) {
-          const height = 30 + Math.sin(x / 50 + Date.now() / 1000) * 5;
-          ctx.rect(x, canvas.height - height, 20, height);
-        }
-        ctx.fill();
-        
+        // Звезды
         ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
-        for (let i = 0; i < 15; i++) {
-          const x = (Date.now() / 80 + i * 70) % canvas.width;
-          const y = (Date.now() / 60 + i * 50) % canvas.height;
+        for (let i = 0; i < 10; i++) {
+          const x = (Date.now() / 100 + i * 70) % canvas.width;
+          const y = (Date.now() / 80 + i * 50) % canvas.height;
           ctx.beginPath();
           ctx.arc(x, y, 1.5, 0, Math.PI * 2);
           ctx.fill();
@@ -946,7 +1083,6 @@
       function checkCollision(bottle) {
         const santaCenterX = santa.x + santa.width / 2;
         const santaCenterY = santa.y + santa.height - 40;
-        
         const bottleCenterX = bottle.x + bottle.width / 2;
         const bottleCenterY = bottle.y + bottle.height / 2;
         
@@ -955,7 +1091,7 @@
           Math.pow(santaCenterY - bottleCenterY, 2)
         );
         
-        return distance < 60;
+        return distance < 50;
       }
       
       // Обновляем статистику
@@ -976,26 +1112,14 @@
         const messageEl = document.getElementById('message');
         messageEl.textContent = text;
         messageEl.style.color = color;
-        
-        messageEl.style.opacity = '0';
-        messageEl.style.transform = 'translateY(-10px)';
+        messageEl.style.opacity = '1';
         
         setTimeout(() => {
-          messageEl.style.transition = 'all 0.3s ease';
-          messageEl.style.opacity = '1';
-          messageEl.style.transform = 'translateY(0)';
-        }, 10);
-        
-        setTimeout(() => {
-          if (messageEl.textContent === text) {
-            messageEl.style.opacity = '0';
-            messageEl.style.transform = 'translateY(10px)';
-            setTimeout(() => {
-              if (messageEl.textContent === text) {
-                messageEl.textContent = '';
-              }
-            }, 300);
-          }
+          messageEl.style.opacity = '0';
+          setTimeout(() => {
+            messageEl.textContent = '';
+            messageEl.style.opacity = '1';
+          }, 300);
         }, 2000);
       }
       
@@ -1015,9 +1139,9 @@
         }
       }
       
-      // Управление
+      // Управление с клавиатуры (для компьютера)
       document.addEventListener('keydown', (e) => {
-        if (!gameActive || gamePaused) return;
+        if (!gameState.active || gameState.gamePaused) return;
         
         switch(e.key) {
           case 'ArrowLeft':
@@ -1029,9 +1153,7 @@
             santa.direction = 1;
             break;
           case ' ':
-            gamePaused = !gamePaused;
-            showMessage(gamePaused ? '⏸️ Пауза' : '▶️ Игра продолжается!', '#00CED1');
-            if (!gamePaused) gameLoop();
+            togglePause();
             break;
         }
       });
@@ -1044,7 +1166,14 @@
       
       // Игровой цикл
       function gameLoop() {
-        if (!gameActive || gamePaused) return;
+        if (!gameState.active || gameState.gamePaused) return;
+        
+        // Управление с сенсорных кнопок
+        if (gameState.santaMove !== 0) {
+          santa.x = Math.max(0, Math.min(canvas.width - santa.width, 
+                         santa.x + (santa.speed * gameState.santaMove)));
+          santa.direction = gameState.santaMove;
+        }
         
         gameTime = Date.now() - startTime;
         drawBackground();
@@ -1063,19 +1192,7 @@
             caught++;
             bottles.splice(i, 1);
             
-            switch(bottle.type.name) {
-              case "Винтажное":
-                showMessage(`🍾 ВИНТАЖНОЕ ШАМПАНСКОЕ! +${bottle.type.points} очков!`, '#C0C0C0');
-                break;
-              case "Подарочное":
-                showMessage(`🎁 ПОДАРОЧНОЕ ШАМПАНСКОЕ! +${bottle.type.points} очков!`, '#00CED1');
-                break;
-              case "Игристое":
-                showMessage(`✨ ИГРИСТОЕ ШАМПАНСКОЕ! +${bottle.type.points} очков!`, '#FF69B4');
-                break;
-              default:
-                showMessage(`🥂 Шампанское поймано! +${bottle.type.points} очков`, '#FFD700');
-            }
+            showMessage(`🥂 +${bottle.type.points} очков!`, '#FFD700');
             continue;
           }
           
@@ -1084,7 +1201,7 @@
             missed++;
             
             if (missed % 3 === 0 && missed > 0) {
-              showMessage(`💔 Разбилась бутылка! Осторожнее!`, '#FF416C');
+              showMessage(`💔 Разбилась бутылка!`, '#FF416C');
             }
           }
           
@@ -1094,19 +1211,10 @@
         updateDifficulty();
         
         if (missed >= 10) {
-          gameActive = false;
+          gameState.active = false;
           
           setTimeout(() => {
-            const resultMessage = `
-🎮 Игра окончена!
-
-🏆 Итоговый счёт: ${score}
-🥂 Поймано бутылок: ${caught}
-⏱️ Время игры: ${Math.floor(gameTime/1000)} сек.
-📈 Уровень сложности: ${difficultyLevel}
-
-Хотите сыграть еще раз?
-            `;
+            const resultMessage = `🎮 Игра окончена!\n\n🏆 Итоговый счёт: ${score}\n🥂 Поймано бутылок: ${caught}\n⏱️ Время игры: ${Math.floor(gameTime/1000)} сек.\n📈 Уровень сложности: ${difficultyLevel}\n\nХотите сыграть еще раз?`;
             
             if (confirm(resultMessage)) {
               restartGame();
@@ -1126,62 +1234,58 @@
         spawnRate = 0.008;
         gameSpeed = 1.5;
         bottles = [];
-        gameActive = true;
-        gamePaused = false;
+        gameState.active = true;
+        gameState.gamePaused = false;
         difficultyLevel = 1;
         santa.x = canvas.width / 2 - 50;
         santa.direction = 0;
         santa.frame = 0;
         startTime = Date.now();
         gameTime = 0;
+        gameState.santaMove = 0;
         document.getElementById('message').textContent = '';
         showMessage('🎮 Удачи! Помоги Деду Морозу!', '#4CAF50');
         gameLoop();
       }
       
-      showMessage('🎮 Управляйте Дедом Морозом стрелками ← →', '#4CAF50');
+      showMessage('🎮 Управляйте Дедом Морозом кнопками или стрелками', '#4CAF50');
       gameLoop();
     }
 
-    // Скрыть все блоки
-    function hideAll(){
-      document.getElementById("card").style.display="none";
-      document.getElementById("wish").style.display="none";
-      document.getElementById("gallery").style.display="none";
-      document.getElementById("game").style.display="none";
-    }
-
-    // Снежинки на фоне
+    // ============= ДЕКОРАТИВНЫЕ ЭФФЕКТЫ =============
     function createSnowflake() {
       const snowflake = document.createElement("div");
       snowflake.classList.add("snowflake");
-      snowflake.innerHTML = ["❄", "❅", "❆", "✦", "✧"][Math.floor(Math.random()*5)];
+      snowflake.innerHTML = ["❄", "❅", "❆"][Math.floor(Math.random()*3)];
       snowflake.style.left = Math.random() * window.innerWidth + "px";
       snowflake.style.animationDuration = (Math.random()*5+3)+"s";
-      snowflake.style.fontSize = (Math.random()*20+15)+"px";
+      snowflake.style.fontSize = (Math.random()*15+10)+"px";
       snowflake.style.opacity = Math.random()*0.6+0.4;
       document.body.appendChild(snowflake);
       setTimeout(()=>snowflake.remove(), 8000);
     }
-    setInterval(createSnowflake, 150);
+    setInterval(createSnowflake, 200);
 
-    // Создание блесток
     function createSparkle() {
-      if (Math.random() > 0.7) {
+      if (Math.random() > 0.8) {
         const sparkle = document.createElement("div");
         sparkle.classList.add("sparkle");
         sparkle.style.left = Math.random() * window.innerWidth + "px";
         sparkle.style.top = Math.random() * window.innerHeight + "px";
         sparkle.style.animationDelay = Math.random() * 2 + "s";
-        sparkle.style.backgroundColor = ["gold", "silver", "#FF69B4"][Math.floor(Math.random()*3)];
+        sparkle.style.backgroundColor = ["gold", "#FF69B4"][Math.floor(Math.random()*2)];
         document.body.appendChild(sparkle);
         setTimeout(()=>sparkle.remove(), 3000);
       }
     }
-    setInterval(createSparkle, 100);
+    setInterval(createSparkle, 150);
+
+    // Предотвращение масштабирования при двойном тапе на кнопках
+    document.addEventListener('touchstart', function(e) {
+      if (e.target.tagName === 'BUTTON') {
+        e.preventDefault();
+      }
+    }, { passive: false });
   </script>
 </body>
 </html>
-
-
-
