@@ -258,6 +258,7 @@
       padding: 10px;
     }
 
+    /* УМЕНЬШЕННЫЕ КНОПКИ НАВИГАЦИИ */
     .modal-nav {
       position: absolute;
       top: 50%;
@@ -265,13 +266,18 @@
       background-color: rgba(0, 0, 0, 0.7);
       color: white;
       border: none;
-      padding: 20px 25px;
-      font-size: 28px;
+      padding: 12px 16px; /* Уменьшено с 20px 25px */
+      font-size: 20px; /* Уменьшено с 28px */
       cursor: pointer;
       border-radius: 50%;
       transition: all 0.3s ease;
       z-index: 10000;
       -webkit-tap-highlight-color: transparent;
+      min-width: 45px; /* Добавлено для фиксированного размера */
+      min-height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .modal-nav:hover {
@@ -280,11 +286,11 @@
     }
 
     .prev {
-      left: 20px;
+      left: 15px; /* Уменьшено с 20px */
     }
 
     .next {
-      right: 20px;
+      right: 15px; /* Уменьшено с 20px */
     }
 
     .image-counter {
@@ -328,12 +334,14 @@
       }
       
       .modal-nav {
-        padding: 15px 20px;
-        font-size: 24px;
+        padding: 10px 12px; /* Уменьшено для мобильных */
+        font-size: 18px;
+        min-width: 40px;
+        min-height: 40px;
       }
       
-      .prev { left: 15px; }
-      .next { right: 15px; }
+      .prev { left: 10px; } /* Уменьшено */
+      .next { right: 10px; } /* Уменьшено */
       
       .close {
         top: 15px;
@@ -375,6 +383,16 @@
         padding: 15px !important;
         margin: 20px auto !important;
       }
+      
+      .modal-nav {
+        padding: 8px 10px; /* Еще меньше для маленьких экранов */
+        font-size: 16px;
+        min-width: 35px;
+        min-height: 35px;
+      }
+      
+      .prev { left: 8px; }
+      .next { right: 8px; }
     }
     
     /* Для горизонтальной ориентации телефона */
@@ -400,6 +418,13 @@
         width: 80px; 
         height: 80px;
         margin: 4px;
+      }
+      
+      .modal-nav {
+        padding: 6px 8px;
+        font-size: 14px;
+        min-width: 30px;
+        min-height: 30px;
       }
     }
     
@@ -441,6 +466,9 @@
   <div id="wish" style="display:none;">
     <h2>🌟 Случайное пожелание</h2>
     <p id="wishText" style="font-size: 1.3em; font-style: italic;"></p>
+    <p id="wishHint" style="font-size: 0.9em; opacity: 0.7; margin-top: 20px;">
+      ✨ Это пожелание выбрано специально для вас и больше не изменится
+    </p>
   </div>
 
   <div id="gallery" style="display:none;">
@@ -488,6 +516,7 @@
   <script>
     // ============= ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ =============
     let currentImageIndex = 0;
+    let userWish = null; // Хранит пожелание пользователя
     
     // Массив с путями к изображениям
     const galleryImages = [
@@ -588,8 +617,15 @@
     function generateWish() {
       hideAll();
       document.getElementById("wish").style.display = "block";
-      const randomWish = wishes[Math.floor(Math.random() * wishes.length)];
-      document.getElementById("wishText").innerHTML = `"${randomWish}"`;
+      
+      // Если пожелание уже было выбрано - показываем то же самое
+      if (userWish === null) {
+        // Выбираем случайное пожелание только при первом нажатии
+        const randomIndex = Math.floor(Math.random() * wishes.length);
+        userWish = wishes[randomIndex];
+      }
+      
+      document.getElementById("wishText").innerHTML = `"${userWish}"`;
     }
 
     function showGallery() {
